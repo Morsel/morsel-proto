@@ -1,0 +1,15 @@
+PODS:
+  - AsyncDisplayKit (1.0.1):
+    - AsyncDisplayKit/ASDealloc2MainObject (= 1.0.1)
+  - AsyncDisplayKit/ASDealloc2MainObject (1.0.1)
+  - Lyt (0.4)
+
+DEPENDENCIES:
+  - AsyncDisplayKit (~> 1.0)
+  - Lyt (~> 0.4)
+
+SPEC CHECKSUMS:
+  AsyncDisplayKit: 1bbf78b78795370cc191b15ad7755683c32cc927
+  Lyt: 49e53b626acb450207aa217df08cb2fca0c7b342
+
+COCOAPODS: 0.35.0
