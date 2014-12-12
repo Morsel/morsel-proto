@@ -8,14 +8,18 @@
 
 import UIKit
 
+let kAPIURL = "https://api-staging.eatmorsel.com"
+//let kAPIURL = "http://morsel.dev:3000"
+
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
 
-
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         // Override point for customization after application launch.
+        setupAppearance()
+
         return true
     }
 
@@ -42,5 +46,78 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
 
+    func setupAppearance() {
+        var navBarColor = UIColor(red: 0.976470588, green: 0.968627451, blue: 0.968627451, alpha: 1.0)
+        if UINavigationBar.respondsToSelector(Selector("appearance")) {
+            UINavigationBar.appearance().barTintColor = navBarColor
+            UINavigationBar.appearance().setBackgroundImage(imageWithColor(navBarColor), forBarMetrics: UIBarMetrics.Default)
+            UINavigationBar.appearance().backgroundColor = navBarColor
+        }
+        UITableViewHeaderFooterView.appearance().tintColor = navBarColor
+
+        UITabBarItem.appearance().setTitleTextAttributes([
+            NSFontAttributeName: UIFont(name: "HelveticaNeue-Medium", size: 18.0)!,
+            NSForegroundColorAttributeName: UIColor(red: 0.914, green: 0.38, blue: 0.267, alpha: 1.0)
+        ], forState: UIControlState.Normal)
+    }
+
+    func imageWithColor(color : UIColor) -> UIImage {
+        var rect = CGRectMake(0.0, 0.0, 1.0, 1.0)
+        UIGraphicsBeginImageContext(rect.size)
+        var context = UIGraphicsGetCurrentContext()
+        CGContextSetFillColorWithColor(context, color.CGColor)
+        CGContextFillRect(context, rect)
+
+        var image = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+
+        return image
+    }
 }
 
+extension UIButton {
+    func pro_disable(shouldDisable: Bool) {
+        enabled = !shouldDisable
+        alpha = shouldDisable ? 0.5 : 1.0
+    }
+}
+
+extension UIColor {
+    class func randomColor() -> UIColor {
+        return self(
+            hue: mt_randomNormal(nil),
+            saturation: mt_randomNormal(0.5),
+            brightness: mt_randomNormal(0.5),
+            alpha: 1
+        )
+    }
+
+    //  Return a cgfloat from 0.0 -> 1.0, + offset
+    private class func mt_randomNormal(offset : CGFloat?) -> CGFloat {
+        return min(CGFloat(Float(arc4random()) / Float(UINT32_MAX)) + (offset ?? 0.0), 1.0)
+    }
+}
+
+extension UINavigationItem {
+    func pro_disableButtons(shouldDisable: Bool) {
+        leftBarButtonItem?.enabled = !shouldDisable
+        rightBarButtonItem?.enabled = !shouldDisable
+    }
+}
+
+class Util {
+    class func clamp<T: Comparable>(a: T, min: T, max: T) -> T {
+        return Swift.max(min, Swift.min(max, a))
+    }
+
+    class func showOkAlertWithTitle(title: String, message: String) {
+        var alertView = UIAlertView(
+            title: title,
+            message: message,
+            delegate: nil,
+            cancelButtonTitle: "Ok"
+        )
+        
+        alertView.show()
+    }
+}
