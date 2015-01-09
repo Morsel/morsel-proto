@@ -7,7 +7,7 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
-        <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="PDR-wu-kw3" customClass="PROInputAccessoryView" customModule="MorselAddPrototype" customModuleProvider="target">
+        <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="PDR-wu-kw3" customClass="PROInputAccessoryView" customModule="Morsel_Proto" customModuleProvider="target">
             <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
             <items>
@@ -28,7 +28,7 @@
                     </connections>
                 </barButtonItem>
                 <barButtonItem style="plain" systemItem="flexibleSpace" id="wym-C2-cB8"/>
-                <barButtonItem title="⌄⌨" id="ySB-Oo-DQs">
+                <barButtonItem title="Done" id="ySB-Oo-DQs">
                     <connections>
                         <action selector="dismissKeyboard" destination="PDR-wu-kw3" id="de1-5Q-okH"/>
                     </connections>

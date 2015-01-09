@@ -120,7 +120,13 @@ class PROManageMorselViewController: UIViewController,
             name: UIKeyboardWillShowNotification,
             object: nil
         )
-
+        
+        defaultNotificationCenter.addObserver(self,
+            selector: Selector("keyboardWillHide:"),
+            name: UIKeyboardWillHideNotification,
+            object: nil
+        )
+        
         defaultNotificationCenter.addObserver(self,
             selector: Selector("keyboardDidShow:"),
             name: UIKeyboardDidShowNotification,
@@ -191,6 +197,11 @@ class PROManageMorselViewController: UIViewController,
         } else {
             navigationItem.rightBarButtonItem?.title = morsel!.isDraft ? "Publish" : "Done"
         }
+    }
+
+    func toggleNavBarHidden(hidden: Bool) {
+        UIApplication.sharedApplication().setStatusBarHidden(hidden, withAnimation: UIStatusBarAnimation.Slide)
+        navigationController?.setNavigationBarHidden(hidden, animated: true)
     }
 
     func toggleTabBarHidden(hidden: Bool) {
@@ -370,7 +381,12 @@ class PROManageMorselViewController: UIViewController,
         var keyboardFrame = notification.userInfo?[UIKeyboardFrameEndUserInfoKey]?.CGRectValue()
         defaultKeyboardHeight = keyboardFrame!.height
 
+        toggleNavBarHidden(true)
         updateScrollPosition()
+    }
+
+    func keyboardWillHide(notification: NSNotification) {
+        toggleNavBarHidden(false)
     }
 
     func keyboardDidShow(notification: NSNotification) {
