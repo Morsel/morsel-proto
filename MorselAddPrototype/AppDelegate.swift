@@ -54,11 +54,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             UINavigationBar.appearance().backgroundColor = navBarColor
         }
         UITableViewHeaderFooterView.appearance().tintColor = navBarColor
-
-        UITabBarItem.appearance().setTitleTextAttributes([
-            NSFontAttributeName: UIFont(name: "HelveticaNeue-Medium", size: 18.0)!,
-            NSForegroundColorAttributeName: UIColor(red: 0.914, green: 0.38, blue: 0.267, alpha: 1.0)
-        ], forState: UIControlState.Normal)
     }
 
     func imageWithColor(color : UIColor) -> UIImage {

@@ -5,7 +5,7 @@
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6247"/>
     </dependencies>
     <scenes>
-        <!--Recent Morsels-->
+        <!--Morsels-->
         <scene sceneID="jFh-Kg-CjA">
             <objects>
                 <tableViewController id="HSQ-un-C7a" customClass="PROMorselsTableViewController" customModule="Morsel_Proto" customModuleProvider="target" sceneMemberID="viewController">
@@ -50,7 +50,7 @@
                             <outlet property="delegate" destination="HSQ-un-C7a" id="qtf-BJ-snn"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" title="Recent Morsels" id="oxy-wR-EWl"/>
+                    <navigationItem key="navigationItem" title="Morsels" id="oxy-wR-EWl"/>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="2zF-Kk-n0j" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
@@ -61,11 +61,11 @@
             <objects>
                 <viewController id="GV3-BY-T0z" customClass="PROManageMorselViewController" customModule="Morsel_Proto" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="9ca-Na-FvX">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="504"/>
+                        <rect key="frame" x="0.0" y="64" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="REa-my-kHr">
-                                <rect key="frame" x="0.0" y="0.0" width="320" height="504"/>
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <view key="tableHeaderView" contentMode="scaleToFill" id="6Fx-Vj-58c">
@@ -229,7 +229,7 @@
                                 <action selector="cancel:" destination="GV3-BY-T0z" id="6vH-M1-ehL"/>
                             </connections>
                         </barButtonItem>
-                        <barButtonItem key="rightBarButtonItem" title="Publish" id="Sc3-Aj-O2a">
+                        <barButtonItem key="rightBarButtonItem" title="Publish Update" id="Sc3-Aj-O2a">
                             <connections>
                                 <action selector="submit:" destination="GV3-BY-T0z" id="FgK-sH-HrW"/>
                             </connections>
@@ -257,7 +257,7 @@
         <scene sceneID="Ocz-Tk-eOf">
             <objects>
                 <navigationController id="sFL-Oe-R5B" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="Add" id="Vea-l8-bLM"/>
+                    <tabBarItem key="tabBarItem" title="Add" image="add" id="Vea-l8-bLM"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="QJU-1O-RHK">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
@@ -333,7 +333,7 @@
         <scene sceneID="ACK-zc-iU5">
             <objects>
                 <navigationController id="2fA-yw-qeN" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="Morsels" id="cho-wZ-PYZ"/>
+                    <tabBarItem key="tabBarItem" title="Morsels" image="morsels" id="cho-wZ-PYZ"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" translucent="NO" id="efW-yP-UVB">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
@@ -367,7 +367,7 @@
             </objects>
             <point key="canvasLocation" x="87.466666666666669" y="352.15999999999997"/>
         </scene>
-        <!--Profile-->
+        <!--Help-->
         <scene sceneID="oWH-YX-30e">
             <objects>
                 <viewController id="UTR-ks-D4Q" customClass="PROProfileViewController" customModule="Morsel_Proto" customModuleProvider="target" sceneMemberID="viewController">
@@ -376,14 +376,14 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Placeholder tab" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="3Ev-qq-RGC">
-                                <rect key="frame" x="0.0" y="91" width="320" height="21"/>
+                                <rect key="frame" x="0.0" y="36" width="320" height="21"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <view contentMode="scaleToFill" id="gqf-yi-G37">
-                                <rect key="frame" x="0.0" y="147" width="320" height="80"/>
+                                <rect key="frame" x="0.0" y="57" width="320" height="80"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="vAy-qx-dtx">
@@ -402,10 +402,103 @@
                                 </subviews>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                             </view>
+                            <view contentMode="scaleToFill" id="FuM-d0-sFd">
+                                <rect key="frame" x="0.0" y="141" width="320" height="1"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <color key="backgroundColor" red="0.8862745098" green="0.86666666670000003" blue="0.84313725490000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            </view>
+                            <view contentMode="scaleToFill" id="W8k-1N-qBN">
+                                <rect key="frame" x="0.0" y="183" width="320" height="270"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" usesAttributedText="YES" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="Roc-of-gDM">
+                                        <rect key="frame" x="20" y="0.0" width="288" height="250"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <attributedString key="attributedText">
+                                            <fragment content="This is a prototype of a new morsel add process, but it ">
+                                                <attributes>
+                                                    <color key="NSColor" cocoaTouchSystemColor="darkTextColor"/>
+                                                    <font key="NSFont" size="12" name="HelveticaNeue"/>
+                                                    <paragraphStyle key="NSParagraphStyle" alignment="left" lineBreakMode="wordWrapping" baseWritingDirection="natural"/>
+                                                </attributes>
+                                            </fragment>
+                                            <fragment content="IS CONNECTED TO YOUR LIVE ACCOUNT">
+                                                <attributes>
+                                                    <color key="NSColor" cocoaTouchSystemColor="darkTextColor"/>
+                                                    <font key="NSFont" size="12" name="HelveticaNeue-Medium"/>
+                                                    <font key="NSOriginalFont" size="12" name="HelveticaNeue-Medium"/>
+                                                    <paragraphStyle key="NSParagraphStyle" alignment="left" lineBreakMode="wordWrapping" baseWritingDirection="natural"/>
+                                                </attributes>
+                                            </fragment>
+                                            <fragment>
+                                                <string key="content">.
+
+</string>
+                                                <attributes>
+                                                    <color key="NSColor" cocoaTouchSystemColor="darkTextColor"/>
+                                                    <font key="NSFont" size="12" name="HelveticaNeue"/>
+                                                    <paragraphStyle key="NSParagraphStyle" alignment="left" lineBreakMode="wordWrapping" baseWritingDirection="natural"/>
+                                                </attributes>
+                                            </fragment>
+                                            <fragment content="Things to know:">
+                                                <attributes>
+                                                    <color key="NSColor" cocoaTouchSystemColor="darkTextColor"/>
+                                                    <font key="NSFont" size="12" name="HelveticaNeue-Bold"/>
+                                                    <paragraphStyle key="NSParagraphStyle" alignment="left" lineBreakMode="wordWrapping" baseWritingDirection="natural"/>
+                                                </attributes>
+                                            </fragment>
+                                            <fragment>
+                                                <string key="content">
+- Morsels can be created and shared over time in smaller pieces.
+- Published updates will automatically be sent to your social media accounts.
+
+</string>
+                                                <attributes>
+                                                    <color key="NSColor" cocoaTouchSystemColor="darkTextColor"/>
+                                                    <font key="NSFont" size="12" name="HelveticaNeue"/>
+                                                    <paragraphStyle key="NSParagraphStyle" alignment="left" lineBreakMode="wordWrapping" baseWritingDirection="natural"/>
+                                                </attributes>
+                                            </fragment>
+                                            <fragment content="For simplicity:">
+                                                <attributes>
+                                                    <color key="NSColor" cocoaTouchSystemColor="darkTextColor"/>
+                                                    <font key="NSFont" size="12" name="HelveticaNeue-Bold"/>
+                                                    <font key="NSOriginalFont" size="12" name="HelveticaNeue-Bold"/>
+                                                    <paragraphStyle key="NSParagraphStyle" alignment="left" lineBreakMode="wordWrapping" baseWritingDirection="natural"/>
+                                                </attributes>
+                                            </fragment>
+                                            <fragment>
+                                                <string key="content">
+- You cannot reorder photos within a morsel.
+- The last image automatically becomes the cover photo.
+- This prototype does not sync morsels to Instagram.</string>
+                                                <attributes>
+                                                    <color key="NSColor" cocoaTouchSystemColor="darkTextColor"/>
+                                                    <font key="NSFont" size="12" name="HelveticaNeue"/>
+                                                    <paragraphStyle key="NSParagraphStyle" alignment="left" lineBreakMode="wordWrapping" baseWritingDirection="natural"/>
+                                                </attributes>
+                                            </fragment>
+                                        </attributedString>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                </subviews>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                            </view>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="fNF-kG-9KB">
+                                <rect key="frame" x="0.0" y="152" width="320" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
+                                <state key="normal" title="SEND US FEEDBACK">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="sendFeedback:" destination="UTR-ks-D4Q" eventType="touchUpInside" id="k8o-wZ-plE"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </view>
-                    <tabBarItem key="tabBarItem" title="Profile" id="wFU-vc-X1G"/>
+                    <tabBarItem key="tabBarItem" title="Help" image="help" id="wFU-vc-X1G"/>
                     <connections>
                         <outlet property="usernameLabel" destination="3Ev-qq-RGC" id="dDb-H9-9JJ"/>
                     </connections>
@@ -416,7 +509,10 @@
         </scene>
     </scenes>
     <resources>
+        <image name="add" width="30" height="30"/>
+        <image name="help" width="30" height="30"/>
         <image name="morsel-m-light" width="24" height="24"/>
+        <image name="morsels" width="30" height="30"/>
     </resources>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">
         <simulatedStatusBarMetrics key="statusBar"/>
@@ -424,6 +520,6 @@
         <simulatedScreenMetrics key="destination" type="retina4"/>
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
-        <segue reference="xVO-C1-e2z"/>
+        <segue reference="vfX-q8-9ck"/>
     </inferredMetricsTieBreakers>
 </document>

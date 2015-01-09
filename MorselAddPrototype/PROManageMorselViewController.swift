@@ -195,7 +195,7 @@ class PROManageMorselViewController: UIViewController,
         if morsel == nil {
             navigationItem.rightBarButtonItem?.title = ""
         } else {
-            navigationItem.rightBarButtonItem?.title = morsel!.isDraft ? "Publish" : "Done"
+            navigationItem.rightBarButtonItem?.title = "Publish Update"
         }
     }
 
