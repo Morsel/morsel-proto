@@ -16,3 +16,5 @@
 #import <Rollbar/Rollbar.h>
 #import <RSKImageCropper/RSKImageCropper.h>
 #import <XMLDictionary/XMLDictionary.h>
+
+#import "FXBlurView.h"

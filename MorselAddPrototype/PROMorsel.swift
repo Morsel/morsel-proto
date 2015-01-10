@@ -83,6 +83,16 @@ class PROMorsel: NSObject {
         return lastID != nil ? lastID! : primaryItemID!
     }
 
+    func primaryItem() -> PROItem? {
+        if primaryItemID != nil {
+            return dataManager.findItem(primaryItemID!, morsel: self)
+        } else if items.count > 0 {
+            return items.last
+        } else {
+            return nil
+        }
+    }
+
     func status() -> String? {
         if isPublishing {
             return "PUBLISHING"

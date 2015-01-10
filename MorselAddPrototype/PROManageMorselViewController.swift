@@ -179,6 +179,7 @@ class PROManageMorselViewController: UIViewController,
             tableView?.tableHeaderView = nil
         } else {
             var titleCell: PROTableViewCell = tableView?.dequeueReusableCellWithIdentifier("editTitleCell") as PROTableViewCell
+            titleCell.titleCell = true
             titleCell.textView?.text = morsel!.title
             titleCellHeight = CGFloat(titleCell.cellHeight!)
             tableView?.tableHeaderView = nil
@@ -743,14 +744,46 @@ class PROManageMorselViewController: UIViewController,
 
         cell.titleCell = indexPath.section == 0
         var textView = cell.textView
+        var imageView = cell.photoImageView
         if textView != nil {
             if indexPath.section == 0 {
                 textView?.text = morsel != nil ? morsel!.title : nil
+                if imageView != nil {
+                    var primaryItem: PROItem? = morsel?.primaryItem()
+                    if primaryItem != nil {
+                        if primaryItem?.photoImage == nil {
+                            if primaryItem?.photoURL != nil {
+                                imageView?.setImageWithURLRequest(NSURLRequest(URL: NSURL(string: primaryItem!.photoURL!)!),
+                                    placeholderImage: nil,
+                                    usingActivityIndicatorStyle: UIActivityIndicatorViewStyle.WhiteLarge,
+                                    success: { (imageRequest, urlResponse, image) -> Void in
+                                        if imageView?.image == image { return }
+                                        primaryItem?.photoImage = image
+                                        imageView?.alpha = 0.0
+                                        imageView?.image = image.blurredImageWithRadius(20.0, iterations: 2, tintColor: UIColor.blackColor())
+                                        UIView.animateWithDuration(0.3, animations: {
+                                            imageView?.alpha = 1.0
+                                            return
+                                        })
+                                    },
+                                    failure: { (imageRequest, urlResponse, error) -> Void in
+                                        imageView?.image = nil
+                                        return
+                                })
+                            } else {
+                                imageView?.image = nil
+                            }
+                        } else {
+                            imageView?.image = primaryItem?.photoImage?.blurredImageWithRadius(20.0, iterations: 2, tintColor: UIColor.blackColor())
+                        }
+                    } else {
+                        imageView?.image = nil
+                    }
+                }
             } else if indexPath.section == 1 {
                 var item: PROItem = morsel!.sortedItems[indexPath.row]
                 textView?.text = item.text
 
-                var imageView = cell.photoImageView
                 if item.photoImage == nil {
                     if item.photoURL != nil {
                         imageView?.setImageWithURLRequest(NSURLRequest(URL: NSURL(string: item.photoURL!)!),

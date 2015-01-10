@@ -16,6 +16,7 @@
 		4046575B1A577B810000C334 /* PROProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4046575A1A577B810000C334 /* PROProfileViewController.swift */; };
 		404F74DC1A4239AC00352ADE /* PROInputAccessoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 404F74DB1A4239AC00352ADE /* PROInputAccessoryView.swift */; };
 		404F74E01A4257CF00352ADE /* TODO.md in Sources */ = {isa = PBXBuildFile; fileRef = 404F74DF1A4257CF00352ADE /* TODO.md */; };
+		40721F681A61A9DB0081DA43 /* FXBlurView.m in Sources */ = {isa = PBXBuildFile; fileRef = 40721F671A61A9DB0081DA43 /* FXBlurView.m */; };
 		4074ED961A3A5092008758C7 /* PROTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4074ED951A3A5092008758C7 /* PROTabBarController.swift */; };
 		4074ED981A3A587F008758C7 /* PROMorselsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4074ED971A3A587F008758C7 /* PROMorselsTableViewController.swift */; };
 		408D3A021A3F9FC20014BB0C /* PROTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 408D3A011A3F9FC20014BB0C /* PROTableViewCell.swift */; };
@@ -38,6 +39,8 @@
 		4046575A1A577B810000C334 /* PROProfileViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PROProfileViewController.swift; sourceTree = "<group>"; };
 		404F74DB1A4239AC00352ADE /* PROInputAccessoryView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PROInputAccessoryView.swift; sourceTree = "<group>"; };
 		404F74DF1A4257CF00352ADE /* TODO.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = TODO.md; sourceTree = "<group>"; };
+		40721F661A61A9DB0081DA43 /* FXBlurView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FXBlurView.h; sourceTree = "<group>"; };
+		40721F671A61A9DB0081DA43 /* FXBlurView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FXBlurView.m; sourceTree = "<group>"; };
 		4074ED951A3A5092008758C7 /* PROTabBarController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PROTabBarController.swift; sourceTree = "<group>"; };
 		4074ED971A3A587F008758C7 /* PROMorselsTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PROMorselsTableViewController.swift; sourceTree = "<group>"; };
 		408D3A011A3F9FC20014BB0C /* PROTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PROTableViewCell.swift; sourceTree = "<group>"; };
@@ -117,9 +120,19 @@
 			name = UI;
 			sourceTree = "<group>";
 		};
+		40721F651A61A9DB0081DA43 /* FXBlurView */ = {
+			isa = PBXGroup;
+			children = (
+				40721F661A61A9DB0081DA43 /* FXBlurView.h */,
+				40721F671A61A9DB0081DA43 /* FXBlurView.m */,
+			);
+			path = FXBlurView;
+			sourceTree = "<group>";
+		};
 		40D0D2CC1A3A1B6F00A6BB02 = {
 			isa = PBXGroup;
 			children = (
+				40721F651A61A9DB0081DA43 /* FXBlurView */,
 				40D0D2D71A3A1B6F00A6BB02 /* MorselAddPrototype */,
 				40D0D2D61A3A1B6F00A6BB02 /* Products */,
 				971348646E8DA7A465C5B736 /* Pods */,
@@ -286,6 +299,7 @@
 			files = (
 				40C4536E1A536784005B14C8 /* PROUser.swift in Sources */,
 				401A717C1A3BACDC0083DFE8 /* PROItem.swift in Sources */,
+				40721F681A61A9DB0081DA43 /* FXBlurView.m in Sources */,
 				4074ED961A3A5092008758C7 /* PROTabBarController.swift in Sources */,
 				404F74DC1A4239AC00352ADE /* PROInputAccessoryView.swift in Sources */,
 				4046575B1A577B810000C334 /* PROProfileViewController.swift in Sources */,

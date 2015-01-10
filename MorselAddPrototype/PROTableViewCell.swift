@@ -28,9 +28,13 @@ class PROTableViewCell: UITableViewCell, UITextViewDelegate, UIActionSheetDelega
 
     var textViewHeight: Float? {
         get {
-            let width: CGFloat? = textView?.frame.size.width
-            var size: CGSize? = textView?.sizeThatFits(CGSizeMake(width!, CGFloat.max))
-            return Float(max(size!.height, (titleCell ? 60.0 : 40.0)))
+            if (titleCell && textView!.text.isEmpty) {
+                return Float(kDefaultTitleCellHeight)
+            } else {
+                let width: CGFloat? = textView?.frame.size.width
+                var size: CGSize? = textView?.sizeThatFits(CGSizeMake(width!, CGFloat.max))
+                return Float(max(size!.height, (titleCell ? 60.0 : 40.0)))
+            }
         }
     }
 
@@ -74,6 +78,8 @@ class PROTableViewCell: UITableViewCell, UITextViewDelegate, UIActionSheetDelega
             infoButton?.layer.shadowOffset = CGSizeZero
             infoButton?.layer.shadowRadius = 5.0
             infoButton?.layer.shadowOpacity = 1.0
+        } else {
+            photoImageView?.frame = frame
         }
     }
 
