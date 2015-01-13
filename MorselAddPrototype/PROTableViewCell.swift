@@ -163,7 +163,7 @@ class PROTableViewCell: UITableViewCell, UITextViewDelegate, UIActionSheetDelega
     func actionSheet(actionSheet: UIActionSheet, clickedButtonAtIndex buttonIndex: Int) {
         if buttonIndex == 0 {
             var delegate: (AnyObject) = (tableView!.delegate! as AnyObject)
-            if ((delegate.respondsToSelector(Selector("tableView:textViewShouldBeginEditing:titleCell:"))) == true) {
+            if ((delegate.respondsToSelector(Selector("tableView:textViewDidBeginEditing:titleCell:"))) == true) {
 
                 delegate.tableView!(tableView!,
                     commitEditingStyle: UITableViewCellEditingStyle.Delete,
