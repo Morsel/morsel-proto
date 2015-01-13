@@ -100,6 +100,7 @@ class PROManageMorselViewController: UIViewController,
     }
 
     var lastUpdatedAtDate: NSDate? = nil
+    var tempImportedImageURL: String? = nil
 
     func findCell(view: UIView?) -> PROTableViewCell? {
         if view == nil {
@@ -239,6 +240,7 @@ class PROManageMorselViewController: UIViewController,
         }
         navigationController?.popToRootViewControllerAnimated(true)
 
+        tempImportedImageURL = nil
         morsel = nil
     }
 
@@ -276,6 +278,32 @@ class PROManageMorselViewController: UIViewController,
                 returnToMorsels()
             }
         }
+    }
+
+    func importURL(urlString: String) {
+        var escapedUrlString: String = urlString.stringByAddingPercentEncodingWithAllowedCharacters(NSCharacterSet.URLHostAllowedCharacterSet())!
+        var url = kWEBAPIURL + "/og/" + escapedUrlString
+        request(Method.GET, url,
+            parameters: [
+                "client[device]": "proto"
+            ]).responseJSON { (request, response, json, error) in
+                if error != nil {
+                    Util.showOkAlertWithTitle("Error!", message: "\(error?.localizedDescription)")
+                    self.tempImportedImageURL = nil
+                } else {
+                    self.tempImportedImageURL = json!.valueForKey("image_url") as NSString
+                    // TODO: Check if photo exists,
+                    // if so, upload
+                    // else create item w/o image
+                    var text = "(Imported from \(urlString))\n\n"
+                    + (json!.valueForKey("title") as NSString) + "\n\n"
+                    + (json!.valueForKey("description") as NSString)
+                    self.apiCreateItem(json!.valueForKey("image_url") as NSString, text)
+                }
+        }
+
+        // TODO: Create Item w/ metadata description
+        // TODO: Upload photo from metadata photo
     }
 
 
@@ -320,13 +348,26 @@ class PROManageMorselViewController: UIViewController,
         presentViewController(picker, animated: true, completion: nil)
     }
 
+    func showImportFromURL() {
+        var alertView = UIAlertView(
+            title: "Import URL",
+            message: "Enter a link below to import it",
+            delegate: self,
+            cancelButtonTitle: "Cancel",
+            otherButtonTitles: "Import"
+        )
+        alertView.alertViewStyle = UIAlertViewStyle.PlainTextInput
+        alertView.textFieldAtIndex(0)?.text = "https://www.eatmorsel.com/paulfehribach/1511-a-signature-duet-of-pork-for-fall"
+        alertView.show()
+    }
+
     func showCameraOrPhotosAlert() {
         var actionSheet = UIActionSheet(
             title: "Select a photo",
             delegate: self,
             cancelButtonTitle: nil,
             destructiveButtonTitle: nil,
-            otherButtonTitles: "Take a Photo", "Select from Library"
+            otherButtonTitles: "Take a Photo", "Select from Library", "Import from URL"
         )
 
         actionSheet.addButtonWithTitle("Cancel")
@@ -539,7 +580,7 @@ class PROManageMorselViewController: UIViewController,
             })
     }
 
-    func apiCreateItem(image: UIImage) {
+    func apiCreateItem(image: UIImage, _ text: String? = nil) {
         updating = true
 
         alamofireManager!.request(Method.POST,
@@ -548,6 +589,7 @@ class PROManageMorselViewController: UIViewController,
                 "client[device]": "proto",
                 "api_key": dataManager.currentUser!.apiKey!,
                 "item[morsel_id]": morsel!.id!,
+                "item[description]": (text != nil ? text! : NSNull()),
                 "prepare_presigned_upload": "true"
             ]).responseJSON({ (request, response, json, error) in
                 self.updating = false
@@ -557,6 +599,33 @@ class PROManageMorselViewController: UIViewController,
                     var item = self.dataManager.importItem((json!.valueForKey("data") as NSDictionary), morsel: self.morsel!)
                     item.photoImage = image
                     self.apiUploadItemPhoto(item)
+                    self.tableView?.reloadSections(NSIndexSet(index: 1), withRowAnimation: .Automatic)
+                    var row = self.morsel!.items.count
+                    if row > 0 {
+                        var indexPath = NSIndexPath(forRow: row - 1, inSection: 1)
+                        self.becomeFirstResponderAtIndexPath(indexPath)
+                    }
+                }
+            })
+    }
+
+    func apiCreateItem(imageUrl: String, _ text: String? = nil) {
+        updating = true
+        
+        alamofireManager!.request(Method.POST,
+            kAPIURL + "/items.json",
+            parameters: [
+                "client[device]": "proto",
+                "api_key": dataManager.currentUser!.apiKey!,
+                "item[morsel_id]": morsel!.id!,
+                "item[description]": (text != nil ? text! : NSNull()),
+                "item[remote_photo_url]": imageUrl
+            ]).responseJSON({ (request, response, json, error) in
+                self.updating = false
+                if error != nil {
+                    Util.showOkAlertWithTitle("Error!", message: "\(error?.localizedDescription)")
+                } else {
+                    var item = self.dataManager.importItem((json!.valueForKey("data") as NSDictionary), morsel: self.morsel!)
                     self.tableView?.reloadSections(NSIndexSet(index: 1), withRowAnimation: .Automatic)
                     var row = self.morsel!.items.count
                     if row > 0 {
@@ -681,6 +750,13 @@ class PROManageMorselViewController: UIViewController,
                     ])
             }
             showPhotoLibrary()
+        } else if buttonIndex == 2 {   //  Import from URL
+            if morsel != nil {
+                dataManager.mixpanel.track("Tapped Import from URL", properties: [
+                    "morsel_id": morsel!.id!
+                    ])
+            }
+            showImportFromURL()
         } else { // Cancel
             if morsel != nil {
                 dataManager.mixpanel.track("Tapped Cancel", properties: [
@@ -696,6 +772,8 @@ class PROManageMorselViewController: UIViewController,
     func alertView(alertView: UIAlertView, clickedButtonAtIndex buttonIndex: Int) {
         if alertView.title == "Unsaved changes" && buttonIndex == 1 {
             cleanupMorsel()
+        } else if (alertView.title == "Import URL" && buttonIndex == 1) {
+            importURL(alertView.textFieldAtIndex(0)!.text)
         }
     }
 
@@ -792,6 +870,26 @@ class PROManageMorselViewController: UIViewController,
                             success: { (imageRequest, urlResponse, image) -> Void in
                                 if imageView?.image == image { return }
                                 item.photoImage = image
+                                imageView?.alpha = 0.0
+                                imageView?.image = image
+                                UIView.animateWithDuration(0.3, animations: {
+                                    imageView?.alpha = 1.0
+                                    return
+                                })
+                            },
+                            failure: { (imageRequest, urlResponse, error) -> Void in
+                                imageView?.image = nil
+                                return
+                        })
+                    } else if tempImportedImageURL != nil {
+                        imageView?.setImageWithURLRequest(NSURLRequest(URL: NSURL(string: tempImportedImageURL!)!),
+                            placeholderImage: nil,
+                            usingActivityIndicatorStyle: UIActivityIndicatorViewStyle.WhiteLarge,
+                            success: { (imageRequest, urlResponse, image) -> Void in
+                                if imageView?.image == image { return }
+                                item.photoImage = image
+                                item.photoURL = self.tempImportedImageURL
+                                self.tempImportedImageURL = nil
                                 imageView?.alpha = 0.0
                                 imageView?.image = image
                                 UIView.animateWithDuration(0.3, animations: {
@@ -916,7 +1014,7 @@ class PROManageMorselViewController: UIViewController,
 
     func imageEditor(editor: CLImageEditor!, didFinishEdittingWithImage image: UIImage!) {
         editor.dismissViewControllerAnimated(false, completion: nil)
-        apiCreateItem(image)
+        apiCreateItem(image, nil)
     }
 
     func imageEditorDidCancel(editor: CLImageEditor!) {
@@ -942,7 +1040,7 @@ class PROManageMorselViewController: UIViewController,
     // MARK: - Testing
 
     func fakeAddItem(image: UIImage) {
-        apiCreateItem(image)
+        apiCreateItem(image, nil)
 
         self.tableView?.tableHeaderView = nil
     }
