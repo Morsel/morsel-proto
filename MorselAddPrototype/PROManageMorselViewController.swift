@@ -579,58 +579,69 @@ class PROManageMorselViewController: UIViewController,
 
     func apiCreateItem(image: UIImage, _ text: String? = nil) {
         updating = true
+        var parameters = [
+            "client[device]": "proto",
+            "api_key": dataManager.currentUser!.apiKey!,
+            "item[morsel_id]": morsel!.id!,
+            "prepare_presigned_upload": "true"
+        ]
+
+        if text != nil {
+            parameters["item[description]"] = text!
+        }
 
         alamofireManager!.request(Method.POST,
             kAPIURL + "/items.json",
-            parameters: [
-                "client[device]": "proto",
-                "api_key": dataManager.currentUser!.apiKey!,
-                "item[morsel_id]": morsel!.id!,
-                "item[description]": (text != nil ? text! : NSNull()),
-                "prepare_presigned_upload": "true"
-            ]).responseJSON({ (request, response, json, error) in
-                self.updating = false
-                if error != nil {
-                    Util.showOkAlertWithTitle("Error!", message: "\(error?.localizedDescription)")
-                } else {
-                    var item = self.dataManager.importItem((json!.valueForKey("data") as NSDictionary), morsel: self.morsel!)
-                    item.photoImage = image
-                    self.apiUploadItemPhoto(item)
-                    self.tableView?.reloadSections(NSIndexSet(index: 1), withRowAnimation: .Automatic)
-                    var row = self.morsel!.items.count
-                    if row > 0 {
-                        var indexPath = NSIndexPath(forRow: row - 1, inSection: 1)
-                        self.becomeFirstResponderAtIndexPath(indexPath)
-                    }
+            parameters: parameters
+        ).responseJSON({ (request, response, json, error) in
+            self.updating = false
+            if error != nil {
+                Util.showOkAlertWithTitle("Error!", message: "\(error?.localizedDescription)")
+            } else {
+                var item = self.dataManager.importItem((json!.valueForKey("data") as NSDictionary), morsel: self.morsel!)
+                item.photoImage = image
+                self.apiUploadItemPhoto(item)
+                self.tableView?.reloadSections(NSIndexSet(index: 1), withRowAnimation: .Automatic)
+                var row = self.morsel!.items.count
+                if row > 0 {
+                    var indexPath = NSIndexPath(forRow: row - 1, inSection: 1)
+                    self.becomeFirstResponderAtIndexPath(indexPath)
                 }
-            })
+            }
+        })
     }
 
     func apiCreateItem(imageUrl: String, _ text: String? = nil) {
         updating = true
+
+        var parameters = [
+            "client[device]": "proto",
+            "api_key": dataManager.currentUser!.apiKey!,
+            "item[morsel_id]": morsel!.id!,
+            "item[remote_photo_url]": imageUrl
+        ]
         
+        if text != nil {
+            parameters["item[description]"] = text!
+        }
+
         alamofireManager!.request(Method.POST,
             kAPIURL + "/items.json",
-            parameters: [
-                "client[device]": "proto",
-                "api_key": dataManager.currentUser!.apiKey!,
-                "item[morsel_id]": morsel!.id!,
-                "item[description]": (text != nil ? text! : NSNull()),
-                "item[remote_photo_url]": imageUrl
-            ]).responseJSON({ (request, response, json, error) in
-                self.updating = false
-                if error != nil {
-                    Util.showOkAlertWithTitle("Error!", message: "\(error?.localizedDescription)")
-                } else {
-                    var item = self.dataManager.importItem((json!.valueForKey("data") as NSDictionary), morsel: self.morsel!)
-                    self.tableView?.reloadSections(NSIndexSet(index: 1), withRowAnimation: .Automatic)
-                    var row = self.morsel!.items.count
-                    if row > 0 {
-                        var indexPath = NSIndexPath(forRow: row - 1, inSection: 1)
-                        self.becomeFirstResponderAtIndexPath(indexPath)
-                    }
+            parameters: parameters
+        ).responseJSON({ (request, response, json, error) in
+            self.updating = false
+            if error != nil {
+                Util.showOkAlertWithTitle("Error!", message: "\(error?.localizedDescription)")
+            } else {
+                var item = self.dataManager.importItem((json!.valueForKey("data") as NSDictionary), morsel: self.morsel!)
+                self.tableView?.reloadSections(NSIndexSet(index: 1), withRowAnimation: .Automatic)
+                var row = self.morsel!.items.count
+                if row > 0 {
+                    var indexPath = NSIndexPath(forRow: row - 1, inSection: 1)
+                    self.becomeFirstResponderAtIndexPath(indexPath)
                 }
-            })
+            }
+        })
     }
 
     func apiDeleteItem(item: PROItem) {
@@ -720,7 +731,7 @@ class PROManageMorselViewController: UIViewController,
         self.view.endEditing(true)
 
         if morsel != nil {
-            dataManager.mixpanel.track("Tapped Append Photo", properties: [
+            dataManager.mixpanel.track("Tapped Add Content", properties: [
                 "morsel_id": morsel!.id!
                 ])
             showCameraOrPhotosAlert()
