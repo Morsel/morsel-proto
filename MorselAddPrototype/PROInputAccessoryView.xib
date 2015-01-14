@@ -22,7 +22,7 @@
                     </connections>
                 </barButtonItem>
                 <barButtonItem style="plain" systemItem="flexibleSpace" id="Qqu-0R-Bvt"/>
-                <barButtonItem title="Append Photo" id="eC0-W4-fvc">
+                <barButtonItem title="＋ Add Content" id="eC0-W4-fvc">
                     <connections>
                         <action selector="addButtonTapped" destination="PDR-wu-kw3" id="ZF6-dh-dwp"/>
                     </connections>
