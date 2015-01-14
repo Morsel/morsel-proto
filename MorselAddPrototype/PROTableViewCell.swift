@@ -57,9 +57,9 @@ class PROTableViewCell: UITableViewCell, UITextViewDelegate, UIActionSheetDelega
 
         if textView != nil {
             textView?.frame = CGRectMake(
-                CGRectGetMinX(textView!.frame),
+                CGRectGetMinX(titleCell ? frame : textView!.frame),
                 CGRectGetMinY(textView!.frame),
-                CGRectGetWidth(textView!.frame),
+                CGRectGetWidth(titleCell ? frame : textView!.frame),
                 CGFloat(textViewHeight!)
             )
         }
@@ -73,13 +73,13 @@ class PROTableViewCell: UITableViewCell, UITextViewDelegate, UIActionSheetDelega
             )
         }
 
-        if titleCell == false {
+        if titleCell {
+            photoImageView?.frame = frame
+         } else {
             infoButton?.layer.shadowColor = UIColor.blackColor().CGColor
             infoButton?.layer.shadowOffset = CGSizeZero
             infoButton?.layer.shadowRadius = 5.0
             infoButton?.layer.shadowOpacity = 1.0
-        } else {
-            photoImageView?.frame = frame
         }
     }
 
