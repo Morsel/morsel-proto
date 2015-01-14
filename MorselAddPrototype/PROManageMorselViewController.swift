@@ -301,9 +301,6 @@ class PROManageMorselViewController: UIViewController,
                     self.apiCreateItem(json!.valueForKey("image_url") as NSString, text)
                 }
         }
-
-        // TODO: Create Item w/ metadata description
-        // TODO: Upload photo from metadata photo
     }
 
 
@@ -860,7 +857,7 @@ class PROManageMorselViewController: UIViewController,
                 }
             } else if indexPath.section == 1 {
                 var item: PROItem = morsel!.sortedItems[indexPath.row]
-                textView?.text = item.text
+                cell.setText(item.text)
 
                 if item.photoImage == nil {
                     if item.photoURL != nil {

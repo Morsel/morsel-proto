@@ -83,7 +83,7 @@ class PROTableViewCell: UITableViewCell, UITextViewDelegate, UIActionSheetDelega
         }
     }
 
-    func setText(text: String) {
+    func setText(text: String?) {
         descriptionText = text
         textView?.text = text
 
