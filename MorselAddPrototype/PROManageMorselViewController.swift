@@ -291,14 +291,30 @@ class PROManageMorselViewController: UIViewController,
                     Util.showOkAlertWithTitle("Error!", message: "\(error?.localizedDescription)")
                     self.tempImportedImageURL = nil
                 } else {
-                    self.tempImportedImageURL = json!.valueForKey("image_url") as NSString
-                    // TODO: Check if photo exists,
-                    // if so, upload
-                    // else create item w/o image
-                    var text = "(Imported from \(urlString))\n\n"
-                    + (json!.valueForKey("title") as NSString) + "\n\n"
-                    + (json!.valueForKey("description") as NSString)
-                    self.apiCreateItem(json!.valueForKey("image_url") as NSString, text)
+                    var dictionary = json as NSDictionary
+
+                    var text = ""
+
+                    if (dictionary["url"] != nil && dictionary["url"] as? NSNull != NSNull()) {
+                        let dictString = dictionary["url"] as NSString
+                        text += "(Imported from \(dictString))\n\n"
+                    }
+
+                    if (dictionary["titlea"] != nil && dictionary["titlea"] as? NSNull != NSNull()) {
+                        let dictString = dictionary["titlea"] as NSString
+                        text += "\(dictString))\n\n"
+                    }
+                    if (dictionary["description"] != nil && dictionary["description"] as? NSNull != NSNull()) {
+                        let dictString = dictionary["description"] as NSString
+                        text += "\(dictString))\n\n"
+                    }
+                    if (dictionary["image_url"] != nil && dictionary["image_url"] as? NSNull != NSNull()) {
+                        self.tempImportedImageURL = json!.valueForKey("image_url") as NSString
+                        self.apiCreateItem(json!.valueForKey("image_url") as NSString, text)
+                    } else {
+                        self.tempImportedImageURL = nil
+                        self.apiCreateItem(nil, text)
+                    }
                 }
         }
     }
@@ -611,20 +627,23 @@ class PROManageMorselViewController: UIViewController,
         })
     }
 
-    func apiCreateItem(imageUrl: String, _ text: String? = nil) {
+    func apiCreateItem(imageUrl: String?, _ text: String? = nil) {
         updating = true
 
         var parameters = [
             "client[device]": "proto",
             "api_key": dataManager.currentUser!.apiKey!,
             "item[morsel_id]": morsel!.id!,
-            "item[remote_photo_url]": imageUrl
         ]
         
         if text != nil {
             parameters["item[description]"] = text!
         }
 
+        if imageUrl != nil {
+            parameters["item[remote_photo_url]"] = imageUrl!
+        }
+        
         alamofireManager!.request(Method.POST,
             kAPIURL + "/items.json",
             parameters: parameters
