@@ -46,6 +46,9 @@ class PRODataManager: NSObject {
                 "user_username": currentUser!.username!
             ])
             mixpanel.identify(currentUser!.id!)
+            mixpanel.people.increment("open_count", by: 1)
+            mixpanel.people.set("username", to: currentUser?.username)
+            mixpanel.people.set("first_name", to: currentUser?.username)
         }
     }
 
@@ -59,6 +62,7 @@ class PRODataManager: NSObject {
         Rollbar.currentConfiguration().setPersonId(nil, username: nil, email: nil)
         mixpanel.registerSuperProperties(nil)
         mixpanel.identify(nil)
+        mixpanel.people.set([NSObject : AnyObject]())
     }
 
     func morselsArePublishing() -> Bool {
@@ -131,7 +135,10 @@ class PRODataManager: NSObject {
             "user_username": currentUser!.username!
             ])
         mixpanel.identify(currentUser!.id!)
-        
+        mixpanel.people.increment("open_count", by: 1)
+        mixpanel.people.set("username", to: currentUser?.username)
+        mixpanel.people.set("first_name", to: currentUser?.username)
+
         return currentUser!
     }
 
