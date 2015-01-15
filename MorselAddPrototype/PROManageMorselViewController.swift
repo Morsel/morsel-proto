@@ -300,8 +300,8 @@ class PROManageMorselViewController: UIViewController,
                         text += "(Imported from \(dictString))\n\n"
                     }
 
-                    if (dictionary["titlea"] != nil && dictionary["titlea"] as? NSNull != NSNull()) {
-                        let dictString = dictionary["titlea"] as NSString
+                    if (dictionary["title"] != nil && dictionary["title"] as? NSNull != NSNull()) {
+                        let dictString = dictionary["title"] as NSString
                         text += "\(dictString)\n\n"
                     }
                     if (dictionary["description"] != nil && dictionary["description"] as? NSNull != NSNull()) {
