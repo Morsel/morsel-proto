@@ -302,11 +302,11 @@ class PROManageMorselViewController: UIViewController,
 
                     if (dictionary["titlea"] != nil && dictionary["titlea"] as? NSNull != NSNull()) {
                         let dictString = dictionary["titlea"] as NSString
-                        text += "\(dictString))\n\n"
+                        text += "\(dictString)\n\n"
                     }
                     if (dictionary["description"] != nil && dictionary["description"] as? NSNull != NSNull()) {
                         let dictString = dictionary["description"] as NSString
-                        text += "\(dictString))\n\n"
+                        text += "\(dictString)\n\n"
                     }
                     if (dictionary["image_url"] != nil && dictionary["image_url"] as? NSNull != NSNull()) {
                         self.tempImportedImageURL = json!.valueForKey("image_url") as NSString
