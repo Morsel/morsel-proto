@@ -197,11 +197,13 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 40D0D2F41A3A1B6F00A6BB02 /* Build configuration list for PBXNativeTarget "MorselAddPrototype" */;
 			buildPhases = (
+				40AAA2691A6981D000398FC8 /* Update Build Version */,
 				51982C687BEB163DC1393D40 /* Check Pods Manifest.lock */,
 				40D0D2D11A3A1B6F00A6BB02 /* Sources */,
 				40D0D2D21A3A1B6F00A6BB02 /* Frameworks */,
 				40D0D2D31A3A1B6F00A6BB02 /* Resources */,
 				E12664DDEE62046A5FA3232A /* Copy Pods Resources */,
+				40AAA2681A6981CB00398FC8 /* Rollbar dSYM Upload */,
 			);
 			buildRules = (
 			);
@@ -260,6 +262,36 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		40AAA2681A6981CB00398FC8 /* Rollbar dSYM Upload */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 8;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Rollbar dSYM Upload";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 1;
+			shellPath = /bin/sh;
+			shellScript = "python \"${SRCROOT}/Vendor/Rollbar/upload_dsym.py\"";
+			showEnvVarsInLog = 0;
+		};
+		40AAA2691A6981D000398FC8 /* Update Build Version */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 8;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Update Build Version";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 1;
+			shellPath = /bin/sh;
+			shellScript = "buildNumber=$(date +%Y%m%d%H%M)\n/usr/libexec/PlistBuddy -c \"Set :CFBundleVersion $buildNumber\" \"${PROJECT_DIR}/${INFOPLIST_FILE}\"\n";
+			showEnvVarsInLog = 0;
+		};
 		51982C687BEB163DC1393D40 /* Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
