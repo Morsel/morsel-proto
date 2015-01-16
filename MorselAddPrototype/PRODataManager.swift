@@ -179,6 +179,19 @@ class PRODataManager: NSObject {
         return item
     }
 
+    func removeMorsel(morsel: PROMorsel) {
+        var index: Int?
+        
+        for(idx, _morsel) in enumerate(morsels) {
+            if morsel == _morsel {
+                index = idx
+                break
+            }
+        }
+
+        morsels.removeAtIndex(index!)
+    }
+
     func removeItemFromMorsel(item: PROItem, morsel: PROMorsel) {
         var index: Int?
 

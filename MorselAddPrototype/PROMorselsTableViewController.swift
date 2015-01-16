@@ -122,6 +122,11 @@ class PROMorselsTableViewController: UITableViewController {
         if editingStyle == UITableViewCellEditingStyle.Delete {
             var morsel = dataManager.sortedMorsels[indexPath.row]
 
+            dataManager.removeMorsel(morsel)
+            tableView.deleteRowsAtIndexPaths([indexPath],
+                withRowAnimation: UITableViewRowAnimation.Fade
+            )
+
             request(Method.DELETE,
                 kAPIURL + "/morsels/" + morsel.id! + ".json",
                 parameters: [
@@ -130,7 +135,6 @@ class PROMorselsTableViewController: UITableViewController {
                 ]).responseJSON({ (request, response, json, error) in
                     self.fetchData()
                 })
-
         }
     }
 
