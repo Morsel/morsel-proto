@@ -53,9 +53,10 @@ class PROLoginViewController: UIViewController, UITextFieldDelegate {
             ]).responseJSON { (request, response, json, error) in
                 if error != nil {
                     Util.showOkAlertWithTitle("Error!", message: "\(error?.localizedDescription)")
-                } else if json!.valueForKey("errors") != nil {
-                    Util.showOkAlertWithTitle("Error!", message: "Invalid Login")
-                } else {
+                } else if (json!.valueForKey("errors") != nil && json!.valueForKey("errors") as? NSNull != NSNull()) {
+                    var errors: NSDictionary = json!.valueForKey("errors") as NSDictionary
+                    Util.showOkAlertWithTitle("API Error!", message: "\(errors)")
+                } else if (json!.valueForKey("data") != nil && json!.valueForKey("data") as? NSNull != NSNull()) {
                     self.dataManager.importCurrentUser(json!.valueForKey("data") as? NSDictionary)
                     self.presentViewController(self.appViewController, animated: true, completion: nil)
                 }

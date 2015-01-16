@@ -467,7 +467,10 @@ class PROManageMorselViewController: UIViewController,
                 self.updating = false
                 if error != nil {
                     Util.showOkAlertWithTitle("Error!", message: "\(error?.localizedDescription)")
-                } else {
+                } else if (json!.valueForKey("errors") != nil && json!.valueForKey("errors") as? NSNull != NSNull()) {
+                    var errors: NSDictionary = json!.valueForKey("errors") as NSDictionary
+                    Util.showOkAlertWithTitle("API Error!", message: "\(errors)")
+                } else if (json!.valueForKey("data") != nil && json!.valueForKey("data") as? NSNull != NSNull()) {
                     self.morsel = self.dataManager.importMorsel((json!.valueForKey("data") as NSDictionary))
                 }
             })
@@ -484,6 +487,12 @@ class PROManageMorselViewController: UIViewController,
                 "api_key": dataManager.currentUser!.apiKey!
             ]).responseJSON({ (request, response, json, error) in
                 self.updating = false
+                if error != nil {
+                    Util.showOkAlertWithTitle("Error!", message: "\(error?.localizedDescription)")
+                } else if (json!.valueForKey("errors") != nil && json!.valueForKey("errors") as? NSNull != NSNull()) {
+                    var errors: NSDictionary = json!.valueForKey("errors") as NSDictionary
+                    Util.showOkAlertWithTitle("API Error!", message: "\(errors)")
+                }
                 self.returnToMorsels()
             })
     }
@@ -502,7 +511,10 @@ class PROManageMorselViewController: UIViewController,
                     self.updating = false
                     if error != nil {
                         Util.showOkAlertWithTitle("Error!", message: "\(error?.localizedDescription)")
-                    } else {
+                    } else if (json!.valueForKey("errors") != nil && json!.valueForKey("errors") as? NSNull != NSNull()) {
+                        var errors: NSDictionary = json!.valueForKey("errors") as NSDictionary
+                        Util.showOkAlertWithTitle("API Error!", message: "\(errors)")
+                    } else if (json!.valueForKey("data") != nil && json!.valueForKey("data") as? NSNull != NSNull()) {
                         self.morsel?.updateFromJSON((json!.valueForKey("data") as NSDictionary))
                         self.morsel?.cleanTitle = self.morsel?.title
                     }
@@ -533,9 +545,13 @@ class PROManageMorselViewController: UIViewController,
                 self.updating = false
                 if error != nil {
                     Util.showOkAlertWithTitle("Error!", message: "\(error?.localizedDescription)")
+                } else if (json!.valueForKey("errors") != nil && json!.valueForKey("errors") as? NSNull != NSNull()) {
+                    var errors: NSDictionary = json!.valueForKey("errors") as NSDictionary
+                    Util.showOkAlertWithTitle("API Error!", message: "\(errors)")
+                } else {
+                    Util.showOkAlertWithTitle("Queued for publication", message: "Expect to see it live in a few seconds. If you're connected with Facebook and Twitter (in the main app), we'll syndicate it out to those too!")
                 }
                 self.dataManager.isPublishing = true
-                Util.showOkAlertWithTitle("Queued for publication", message: "Expect to see it live in a few seconds. If you're connected with Facebook and Twitter (in the main app), we'll syndicate it out to those too!")
                 self.returnToMorsels()
             })
     }
@@ -586,7 +602,10 @@ class PROManageMorselViewController: UIViewController,
                 self.updating = false
                 if error != nil {
                     Util.showOkAlertWithTitle("Error!", message: "\(error?.localizedDescription)")
-                } else {
+                } else if (json!.valueForKey("errors") != nil && json!.valueForKey("errors") as? NSNull != NSNull()) {
+                    var errors: NSDictionary = json!.valueForKey("errors") as NSDictionary
+                    Util.showOkAlertWithTitle("API Error!", message: "\(errors)")
+                } else if (json!.valueForKey("data") != nil && json!.valueForKey("data") as? NSNull != NSNull()) {
                     item.updateFromJSON(json as? NSDictionary)
                     item.cleanText = item.text
                 }
@@ -613,7 +632,10 @@ class PROManageMorselViewController: UIViewController,
             self.updating = false
             if error != nil {
                 Util.showOkAlertWithTitle("Error!", message: "\(error?.localizedDescription)")
-            } else {
+            } else if (json!.valueForKey("errors") != nil && json!.valueForKey("errors") as? NSNull != NSNull()) {
+                var errors: NSDictionary = json!.valueForKey("errors") as NSDictionary
+                Util.showOkAlertWithTitle("API Error!", message: "\(errors)")
+            } else if (json!.valueForKey("data") != nil && json!.valueForKey("data") as? NSNull != NSNull()) {
                 var item = self.dataManager.importItem((json!.valueForKey("data") as NSDictionary), morsel: self.morsel!)
                 item.photoImage = image
                 self.apiUploadItemPhoto(item)
@@ -651,7 +673,10 @@ class PROManageMorselViewController: UIViewController,
             self.updating = false
             if error != nil {
                 Util.showOkAlertWithTitle("Error!", message: "\(error?.localizedDescription)")
-            } else {
+            } else if (json!.valueForKey("errors") != nil && json!.valueForKey("errors") as? NSNull != NSNull()) {
+                var errors: NSDictionary = json!.valueForKey("errors") as NSDictionary
+                Util.showOkAlertWithTitle("API Error!", message: "\(errors)")
+            } else if (json!.valueForKey("data") != nil && json!.valueForKey("data") as? NSNull != NSNull()) {
                 var item = self.dataManager.importItem((json!.valueForKey("data") as NSDictionary), morsel: self.morsel!)
                 self.tableView?.reloadSections(NSIndexSet(index: 1), withRowAnimation: .Automatic)
                 var row = self.morsel!.items.count
@@ -674,6 +699,12 @@ class PROManageMorselViewController: UIViewController,
                 "api_key": dataManager.currentUser!.apiKey!
             ]).responseJSON({ (request, response, json, error) in
                 self.updating = false
+                if error != nil {
+                    Util.showOkAlertWithTitle("Error!", message: "\(error?.localizedDescription)")
+                } else if (json!.valueForKey("errors") != nil && json!.valueForKey("errors") as? NSNull != NSNull()) {
+                    var errors: NSDictionary = json!.valueForKey("errors") as NSDictionary
+                    Util.showOkAlertWithTitle("API Error!", message: "\(errors)")
+                }
             })
     }
 
@@ -693,7 +724,10 @@ class PROManageMorselViewController: UIViewController,
                     self.updating = false
                     if error != nil {
                         Util.showOkAlertWithTitle("Error!", message: "\(error?.localizedDescription)")
-                    } else {
+                    } else if (json!.valueForKey("errors") != nil && json!.valueForKey("errors") as? NSNull != NSNull()) {
+                        var errors: NSDictionary = json!.valueForKey("errors") as NSDictionary
+                        Util.showOkAlertWithTitle("API Error!", message: "\(errors)")
+                    } else if (json!.valueForKey("data") != nil && json!.valueForKey("data") as? NSNull != NSNull()) {
                         item.updateFromJSON(json as? NSDictionary)
                         item.cleanText = item.text
                     }

@@ -61,14 +61,17 @@ class PROMorselsTableViewController: UITableViewController {
     func fetchData() {
         refreshControl?.beginRefreshing()
 
-        request(Method.GET, kAPIURL + "/morsels" + ".json",
+        request(Method.GET, kAPIURL + "/morsels.json",
             parameters: [
                 "client[device]": "proto",
                 "api_key": dataManager.currentUser!.apiKey!
             ]).responseJSON { (request, response, json, error) in
                 if error != nil {
                     Util.showOkAlertWithTitle("Error!", message: "\(error?.localizedDescription)")
-                } else {
+                } else if (json!.valueForKey("errors") != nil && json!.valueForKey("errors") as? NSNull != NSNull()) {
+                    var errors: NSDictionary = json!.valueForKey("errors") as NSDictionary
+                    Util.showOkAlertWithTitle("API Error!", message: "\(errors)")
+                } else if (json!.valueForKey("data") != nil && json!.valueForKey("data") as? NSNull != NSNull()) {
                     self.dataManager.deleteAllMorsels()
                     self.dataManager.importMorsels(json!.valueForKey("data") as [NSDictionary])
                     self.tableView.reloadData()
@@ -133,6 +136,12 @@ class PROMorselsTableViewController: UITableViewController {
                     "client[device]": "proto",
                     "api_key": dataManager.currentUser!.apiKey!
                 ]).responseJSON({ (request, response, json, error) in
+                    if error != nil {
+                        Util.showOkAlertWithTitle("Error!", message: "\(error?.localizedDescription)")
+                    } else if (json!.valueForKey("errors") != nil && json!.valueForKey("errors") as? NSNull != NSNull()) {
+                        var errors: NSDictionary = json!.valueForKey("errors") as NSDictionary
+                        Util.showOkAlertWithTitle("API Error!", message: "\(errors)")
+                    }
                     self.fetchData()
                 })
         }
