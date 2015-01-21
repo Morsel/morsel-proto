@@ -8,7 +8,7 @@
 
 import UIKit
 
-let kAPIURL = "https://api-staging.eatmorsel.com"
+let kAPIURL = "https://api.eatmorsel.com"
 let kWEBAPIURL = "https://morsel-webapi.herokuapp.com"
 //let kAPIURL = "http://morsel.dev:3000"
 
