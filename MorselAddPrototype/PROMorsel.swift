@@ -78,6 +78,10 @@ class PROMorsel: NSObject {
         return sortedItems.count > 0 ? sortedItems.last!.id! : nil
     }
 
+    func lastItemSortOrder() -> Int {
+        return sortedItems.count > 0 ? Int(sortedItems.last!.sortOrder) : 0
+    }
+
     func lastItemOrPrimaryItemID() -> String {
         var lastID: String? = lastItemID()
         return lastID != nil ? lastID! : primaryItemID!

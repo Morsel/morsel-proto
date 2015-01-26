@@ -26,6 +26,7 @@ PODS:
     - CLImageEditor/Core (= 0.1.1)
   - CLImageEditor/Core (0.1.1)
   - DateTools (1.4.3)
+  - ELCImagePickerController (0.2.0)
   - Mixpanel (2.6.2):
     - Mixpanel/MPCategoryHelpers (= 2.6.2)
   - Mixpanel/MPCategoryHelpers (2.6.2)
@@ -39,6 +40,7 @@ DEPENDENCIES:
   - AFNetworking+ImageActivityIndicator (~> 1.0)
   - CLImageEditor (~> 0.1)
   - DateTools (~> 1.4)
+  - ELCImagePickerController (from `https://github.com/B-Sides/ELCImagePickerController.git`, commit `a96964e7ab9d2bfc3cefe48038985ba4db8adf47`)
   - Mixpanel (~> 2.6)
   - Rollbar (~> 0.1)
   - RSKImageCropper (from `https://github.com/Morsel/RSKImageCropper`, commit `59b692708791e1701afd1882f759684fe93a4f35`)
@@ -46,11 +48,17 @@ DEPENDENCIES:
   - XMLDictionary (= 1.4)
 
 EXTERNAL SOURCES:
+  ELCImagePickerController:
+    :commit: a96964e7ab9d2bfc3cefe48038985ba4db8adf47
+    :git: https://github.com/B-Sides/ELCImagePickerController.git
   RSKImageCropper:
     :commit: 59b692708791e1701afd1882f759684fe93a4f35
     :git: https://github.com/Morsel/RSKImageCropper
 
 CHECKOUT OPTIONS:
+  ELCImagePickerController:
+    :commit: a96964e7ab9d2bfc3cefe48038985ba4db8adf47
+    :git: https://github.com/B-Sides/ELCImagePickerController.git
   RSKImageCropper:
     :commit: 59b692708791e1701afd1882f759684fe93a4f35
     :git: https://github.com/Morsel/RSKImageCropper
@@ -60,6 +68,7 @@ SPEC CHECKSUMS:
   AFNetworking+ImageActivityIndicator: c57c1b83395c9a9c03ff247cea8fcd7a2656fcd6
   CLImageEditor: c4b505b26b4ecb0c11ef1dfe45288f5677d19ae4
   DateTools: 7c2d233ea2d4bda3a717d0cd5f58da926a5998d0
+  ELCImagePickerController: 1baf64fadfe088550c16f82225469e4dfad917e2
   Mixpanel: c075cedebda3328ce1ee29a18429e265ce967cd8
   Rollbar: ed31f0e7ba6829de843ae11a691958c0b4885eec
   RSKImageCropper: c8ba980263dda9c08714445bb0ee4b2cb6aa5eb6

@@ -37,7 +37,7 @@ class PROLoginViewController: UIViewController, UITextFieldDelegate {
             loginTextField?.becomeFirstResponder()
         }
     }
-    
+
     @IBAction func login(sender: UIButton) {
         if loginTextField!.text.isEmpty || passwordTextField!.text.isEmpty {
             Util.showOkAlertWithTitle("Empty Fields!", message: "Please fill in both fields")

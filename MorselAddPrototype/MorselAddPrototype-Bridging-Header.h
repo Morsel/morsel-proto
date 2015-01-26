@@ -12,6 +12,8 @@
 #import <AFNetworking+ImageActivityIndicator/AFNetworking+ImageActivityIndicator.h>
 #import <CLImageEditor/CLImageEditor.h>
 #import <DateTools/NSDate+DateTools.h>
+#import <ELCImagePickerController/ELCImagePickerController.h>
+#import <ELCImagePickerController/ELCAlbumPickerController.h>
 #import <Mixpanel/Mixpanel.h>
 #import <Rollbar/Rollbar.h>
 #import <RSKImageCropper/RSKImageCropper.h>

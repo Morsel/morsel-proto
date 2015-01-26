@@ -24,9 +24,10 @@ class PROManageMorselViewController: UIViewController,
     UITableViewDelegate,
     UIActionSheetDelegate,
     UIAlertViewDelegate,
-    UIImagePickerControllerDelegate,
     UINavigationControllerDelegate,
+    UIImagePickerControllerDelegate,
     CLImageEditorDelegate,
+    ELCImagePickerControllerDelegate,
     PROInputAccessoryViewDelegate,
     ExpandableTableViewDelegate,
     RSKImageCropViewControllerDelegate {
@@ -121,13 +122,13 @@ class PROManageMorselViewController: UIViewController,
             name: UIKeyboardWillShowNotification,
             object: nil
         )
-        
+
         defaultNotificationCenter.addObserver(self,
             selector: Selector("keyboardWillHide:"),
             name: UIKeyboardWillHideNotification,
             object: nil
         )
-        
+
         defaultNotificationCenter.addObserver(self,
             selector: Selector("keyboardDidShow:"),
             name: UIKeyboardDidShowNotification,
@@ -158,14 +159,14 @@ class PROManageMorselViewController: UIViewController,
             ])
 
         if tableView?.dataSource == nil { tableView?.dataSource = self }
-        
+
         if tableView?.delegate == nil { tableView?.delegate = self }
-        
+
         alamofireManager = Manager(configuration: NSURLSessionConfiguration.defaultSessionConfiguration())
-        
+
         keyboardInputAccessoryView = PROInputAccessoryView.defaultInputAccessoryView(self)
         keyboardInputAccessoryView?.updatePosition(PROPosition.None)
-        
+
         toggleTabBarHidden(true)
         updating = false
         updatingCounter = 0
@@ -356,10 +357,14 @@ class PROManageMorselViewController: UIViewController,
     }
 
     func showPhotoLibrary() {
-        let picker: UIImagePickerController = UIImagePickerController()
-        picker.delegate = self
-        picker.allowsEditing = false
-        picker.sourceType = UIImagePickerControllerSourceType.PhotoLibrary
+        let albumPicker: ELCAlbumPickerController = ELCAlbumPickerController()
+        let picker: ELCImagePickerController = ELCImagePickerController(rootViewController: albumPicker)
+        picker.maximumImagesCount = 20
+        picker.returnsOriginalImage = true
+        picker.onOrder = true
+        picker.mediaTypes = [(kUTTypeImage as NSString)]
+        picker.imagePickerDelegate = self
+        albumPicker.parent = picker
         presentViewController(picker, animated: true, completion: nil)
     }
 
@@ -407,17 +412,17 @@ class PROManageMorselViewController: UIViewController,
 
         return prevPosition
     }
-    
+
     func positionForNextCell() -> Int {
         var currentPosition = positionForActiveCell()
         var nextPosition = currentPosition + 1
         if nextPosition > tableView?.numberOfRowsInSection(1) {
             nextPosition = 0
         }
-        
+
         return nextPosition
     }
-    
+
     func indexPathForPosition(position: Int) -> NSIndexPath {
         if position > 0 {
             return NSIndexPath(forRow: position - 1, inSection: 1)
@@ -628,7 +633,7 @@ class PROManageMorselViewController: UIViewController,
             })
     }
 
-    func apiCreateItem(image: UIImage, _ text: String? = nil) {
+    func apiCreateItem(image: UIImage, _ text: String? = nil, _ sortOrder: Int? = nil, _ isFirst: Bool = false) {
         updating = true
         var parameters = [
             "client[device]": "proto",
@@ -641,30 +646,39 @@ class PROManageMorselViewController: UIViewController,
             parameters["item[description]"] = text!
         }
 
+        if sortOrder != nil {
+            parameters["item[sort_order]"] = "\(sortOrder!)"
+        }
+
         alamofireManager!.request(Method.POST,
             kAPIURL + "/items.json",
             parameters: parameters
-        ).responseJSON({ (request, response, json, error) in
-            self.updating = false
-            if error != nil {
-                Util.showOkAlertWithTitle("Error", message: "\(error?.localizedDescription)")
-            } else if json != nil {
-                if (json!.valueForKey("errors") != nil && json!.valueForKey("errors") as? NSNull != NSNull()) {
-                    var errors: NSDictionary = json!.valueForKey("errors") as NSDictionary
-                    Util.showOkAlertWithTitle("API Error", message: "\(errors)")
-                } else if (json!.valueForKey("data") != nil && json!.valueForKey("data") as? NSNull != NSNull()) {
-                    var item = self.dataManager.importItem((json!.valueForKey("data") as NSDictionary), morsel: self.morsel!)
-                    item.photoImage = image
-                    self.apiUploadItemPhoto(item)
-                    self.tableView?.reloadSections(NSIndexSet(index: 1), withRowAnimation: .Automatic)
-                    var row = self.morsel!.items.count
-                    if row > 0 {
-                        var indexPath = NSIndexPath(forRow: row - 1, inSection: 1)
-                        self.becomeFirstResponderAtIndexPath(indexPath)
+            ).responseJSON({ (request, response, json, error) in
+                self.updating = false
+                if error != nil {
+                    Util.showOkAlertWithTitle("Error", message: "\(error?.localizedDescription)")
+                } else if json != nil {
+                    if (json!.valueForKey("errors") != nil && json!.valueForKey("errors") as? NSNull != NSNull()) {
+                        var errors: NSDictionary = json!.valueForKey("errors") as NSDictionary
+                        Util.showOkAlertWithTitle("API Error", message: "\(errors)")
+                    } else if (json!.valueForKey("data") != nil && json!.valueForKey("data") as? NSNull != NSNull()) {
+                        var item = self.dataManager.importItem((json!.valueForKey("data") as NSDictionary), morsel: self.morsel!)
+                        item.photoImage = image
+                        self.apiUploadItemPhoto(item)
+                        self.tableView?.reloadSections(NSIndexSet(index: 1), withRowAnimation: .Automatic)
+                        if isFirst {
+                            var row = self.morsel!.items.count
+                            if row > 0 {
+                                var indexPath = NSIndexPath(forRow: row - 1, inSection: 1)
+                                self.tableView?.scrollToRowAtIndexPath(indexPath,
+                                    atScrollPosition: UITableViewScrollPosition.Middle,
+                                    animated: false
+                                )
+                            }
+                        }
                     }
                 }
-            }
-        })
+            })
     }
 
     func apiCreateItem(imageUrl: String?, _ text: String? = nil) {
@@ -675,7 +689,7 @@ class PROManageMorselViewController: UIViewController,
             "api_key": dataManager.currentUser!.apiKey!,
             "item[morsel_id]": morsel!.id!,
         ]
-        
+
         if text != nil {
             parameters["item[description]"] = text!
         }
@@ -683,29 +697,29 @@ class PROManageMorselViewController: UIViewController,
         if imageUrl != nil {
             parameters["item[remote_photo_url]"] = imageUrl!
         }
-        
+
         alamofireManager!.request(Method.POST,
             kAPIURL + "/items.json",
             parameters: parameters
-        ).responseJSON({ (request, response, json, error) in
-            self.updating = false
-            if error != nil {
-                Util.showOkAlertWithTitle("Error", message: "\(error?.localizedDescription)")
-            } else if json != nil {
-                if (json!.valueForKey("errors") != nil && json!.valueForKey("errors") as? NSNull != NSNull()) {
-                    var errors: NSDictionary = json!.valueForKey("errors") as NSDictionary
-                    Util.showOkAlertWithTitle("API Error", message: "\(errors)")
-                } else if (json!.valueForKey("data") != nil && json!.valueForKey("data") as? NSNull != NSNull()) {
-                    var item = self.dataManager.importItem((json!.valueForKey("data") as NSDictionary), morsel: self.morsel!)
-                    self.tableView?.reloadSections(NSIndexSet(index: 1), withRowAnimation: .Automatic)
-                    var row = self.morsel!.items.count
-                    if row > 0 {
-                        var indexPath = NSIndexPath(forRow: row - 1, inSection: 1)
-                        self.becomeFirstResponderAtIndexPath(indexPath)
+            ).responseJSON({ (request, response, json, error) in
+                self.updating = false
+                if error != nil {
+                    Util.showOkAlertWithTitle("Error", message: "\(error?.localizedDescription)")
+                } else if json != nil {
+                    if (json!.valueForKey("errors") != nil && json!.valueForKey("errors") as? NSNull != NSNull()) {
+                        var errors: NSDictionary = json!.valueForKey("errors") as NSDictionary
+                        Util.showOkAlertWithTitle("API Error", message: "\(errors)")
+                    } else if (json!.valueForKey("data") != nil && json!.valueForKey("data") as? NSNull != NSNull()) {
+                        var item = self.dataManager.importItem((json!.valueForKey("data") as NSDictionary), morsel: self.morsel!)
+                        self.tableView?.reloadSections(NSIndexSet(index: 1), withRowAnimation: .Automatic)
+                        var row = self.morsel!.items.count
+                        if row > 0 {
+                            var indexPath = NSIndexPath(forRow: row - 1, inSection: 1)
+                            self.becomeFirstResponderAtIndexPath(indexPath)
+                        }
                     }
                 }
-            }
-        })
+            })
     }
 
     func apiDeleteItem(item: PROItem) {
@@ -764,7 +778,7 @@ class PROManageMorselViewController: UIViewController,
         if morsel != nil {
             dataManager.mixpanel.track("Tapped Cancel", properties: [
                 "morsel_id": morsel!.id!
-            ])
+                ])
         }
 
         if updating {
@@ -1009,7 +1023,7 @@ class PROManageMorselViewController: UIViewController,
             dataManager.mixpanel.track("Deleted Item", properties: [
                 "item_id": item.id!,
                 "morsel_id": morsel!.id!
-            ])
+                ])
             apiDeleteItem(item)
             dataManager.removeItemFromMorsel(item, morsel: morsel!)
             self.view.endEditing(true)
@@ -1030,14 +1044,14 @@ class PROManageMorselViewController: UIViewController,
     func inputAccessoryViewTappedUpButton(inputAccessoryView: UIView) {
         if tableView?.numberOfRowsInSection(1) > 0 {
             becomeFirstResponderAtIndexPath(indexPathForPosition(positionForPreviousCell()))
-//            updateScrollPosition()
+            //            updateScrollPosition()
         }
     }
 
     func inputAccessoryViewTappedDownButton(inputAccessoryView: UIView) {
         if tableView?.numberOfRowsInSection(1) > 0 {
             becomeFirstResponderAtIndexPath(indexPathForPosition(positionForNextCell()))
-//            updateScrollPosition()
+            //            updateScrollPosition()
         }
     }
 
@@ -1103,6 +1117,25 @@ class PROManageMorselViewController: UIViewController,
     func imageEditorDidCancel(editor: CLImageEditor!) {
         editor.dismissViewControllerAnimated(false, completion: nil)
         showCropperForImage(originalImage!)
+    }
+
+
+    // MARK: - ELCImagePickerControllerDelegate
+
+    func elcImagePickerController(picker: ELCImagePickerController!, didFinishPickingMediaWithInfo info: [AnyObject]!) {
+        let lastSortOrder = morsel?.lastItemSortOrder()
+        for (index, dict: NSDictionary) in enumerate(info as [NSDictionary]) {
+            if dict[UIImagePickerControllerMediaType] as NSString == ALAssetTypePhoto {
+                let image: UIImage = dict[UIImagePickerControllerOriginalImage] as UIImage
+                apiCreateItem(image, nil, index + lastSortOrder! + 1, index == 0)
+            }
+        }
+        dismissViewControllerAnimated(false, completion: nil)
+//        showEditorForImage(croppedImage)
+    }
+
+    func elcImagePickerControllerDidCancel(picker: ELCImagePickerController!) {
+        dismissViewControllerAnimated(false, completion: nil)
     }
 
 

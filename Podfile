@@ -8,6 +8,8 @@ pod 'AFNetworking', '~> 2.5'
 pod 'AFNetworking+ImageActivityIndicator', '~> 1.0'
 pod 'CLImageEditor', '~> 0.1'
 pod 'DateTools', '~> 1.4'
+pod 'ELCImagePickerController', git: 'https://github.com/B-Sides/ELCImagePickerController.git', commit: 'a96964e7ab9d2bfc3cefe48038985ba4db8adf47'
+
 # pod 'SDWebImage', '~> 3.7'
 # pod 'imglyKit', '~> 1.0'
 pod 'Mixpanel', '~> 2.6'
