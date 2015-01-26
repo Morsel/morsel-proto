@@ -372,7 +372,7 @@ class PROManageMorselViewController: UIViewController,
             otherButtonTitles: "Import"
         )
         alertView.alertViewStyle = UIAlertViewStyle.PlainTextInput
-//        alertView.textFieldAtIndex(0)?.text = "https://www.eatmorsel.com/paulfehribach/1511-a-signature-duet-of-pork-for-fall"
+        alertView.textFieldAtIndex(0)?.keyboardType = UIKeyboardType.URL
         alertView.show()
     }
 

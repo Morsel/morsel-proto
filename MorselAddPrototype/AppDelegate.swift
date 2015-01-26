@@ -8,9 +8,13 @@
 
 import UIKit
 
+#if DEBUG
+let kAPIURL = "https://api-staging.eatmorsel.com"
+#else
 let kAPIURL = "https://api.eatmorsel.com"
+#endif
+
 let kWEBAPIURL = "https://morsel-webapi.herokuapp.com"
-//let kAPIURL = "http://morsel.dev:3000"
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
