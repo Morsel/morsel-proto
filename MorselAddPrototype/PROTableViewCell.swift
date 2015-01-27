@@ -20,6 +20,9 @@ import UIKit
 }
 
 let kCellBottomPadding: CGFloat = 20.0
+let kDeleteThisItem: String = "Delete this Item"
+let kMakeCoverPhoto: String = "Make Cover Photo"
+
 
 class PROTableViewCell: UITableViewCell, UITextViewDelegate, UIActionSheetDelegate {
     @IBOutlet weak var textView: UITextView? = nil
@@ -101,11 +104,11 @@ class PROTableViewCell: UITableViewCell, UITextViewDelegate, UIActionSheetDelega
         var actionSheet = UIActionSheet(
             title: "Item Options",
             delegate: self,
-            cancelButtonTitle: "Make Cover Photo",
-            destructiveButtonTitle: "Delete this Item"
+            cancelButtonTitle: "Cancel",
+            destructiveButtonTitle: kDeleteThisItem,
+            otherButtonTitles: kMakeCoverPhoto
         )
 
-        actionSheet.addButtonWithTitle("Cancel")
         actionSheet.showInView(tableView)
     }
 
@@ -165,7 +168,9 @@ class PROTableViewCell: UITableViewCell, UITextViewDelegate, UIActionSheetDelega
     func actionSheet(actionSheet: UIActionSheet, clickedButtonAtIndex buttonIndex: Int) {
         tableView!.superview?.endEditing(true)
         endEditing(true)
-        if buttonIndex == 0 {   //  Delete this Item
+
+        switch actionSheet.buttonTitleAtIndex(buttonIndex) {
+        case kDeleteThisItem:
             var delegate: (AnyObject) = (tableView!.delegate! as AnyObject)
             if ((delegate.respondsToSelector(Selector("tableView:textViewDidBeginEditing:titleCell:"))) == true) {
                 delegate.tableView!(tableView!,
@@ -173,13 +178,15 @@ class PROTableViewCell: UITableViewCell, UITextViewDelegate, UIActionSheetDelega
                     forRowAtIndexPath: tableView!.indexPathForCell(self)!
                 )
             }
-        } else if buttonIndex == 1 { // Make Cover Photo
+        case kMakeCoverPhoto:
             var delegate: (AnyObject) = (tableView!.delegate! as AnyObject)
             if ((delegate.respondsToSelector(Selector("tableView:makeCoverPhotoAtIndexPath:"))) == true) {
                 delegate.tableView!(tableView!,
                     makeCoverPhotoAtIndexPath: tableView!.indexPathForCell(self)!
                 )
             }
+        default:
+            return
         }
     }
 }

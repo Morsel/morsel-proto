@@ -298,28 +298,31 @@ class PROManageMorselViewController: UIViewController,
                         self.tempImportedImageURL = nil
                     } else if json != nil {
                         var dictionary = json as NSDictionary
+                        if dictionary.count > 0 {
+                            var text = ""
 
-                        var text = ""
+                            if (dictionary["url"] != nil && dictionary["url"] as? NSNull != NSNull()) {
+                                let dictString = dictionary["url"] as NSString
+                                text += "(Imported from \(dictString))\n\n"
+                            }
 
-                        if (dictionary["url"] != nil && dictionary["url"] as? NSNull != NSNull()) {
-                            let dictString = dictionary["url"] as NSString
-                            text += "(Imported from \(dictString))\n\n"
-                        }
-
-                        if (dictionary["title"] != nil && dictionary["title"] as? NSNull != NSNull()) {
-                            let dictString = dictionary["title"] as NSString
-                            text += "\(dictString)\n\n"
-                        }
-                        if (dictionary["description"] != nil && dictionary["description"] as? NSNull != NSNull()) {
-                            let dictString = dictionary["description"] as NSString
-                            text += "\(dictString)\n\n"
-                        }
-                        if (dictionary["image_url"] != nil && dictionary["image_url"] as? NSNull != NSNull()) {
-                            self.tempImportedImageURL = json!.valueForKey("image_url") as NSString
-                            self.apiCreateItem(json!.valueForKey("image_url") as NSString, text)
+                            if (dictionary["title"] != nil && dictionary["title"] as? NSNull != NSNull()) {
+                                let dictString = dictionary["title"] as NSString
+                                text += "\(dictString)\n\n"
+                            }
+                            if (dictionary["description"] != nil && dictionary["description"] as? NSNull != NSNull()) {
+                                let dictString = dictionary["description"] as NSString
+                                text += "\(dictString)\n\n"
+                            }
+                            if (dictionary["image_url"] != nil && dictionary["image_url"] as? NSNull != NSNull()) {
+                                self.tempImportedImageURL = json!.valueForKey("image_url") as NSString
+                                self.apiCreateItem(json!.valueForKey("image_url") as NSString, text)
+                            } else {
+                                self.tempImportedImageURL = nil
+                                self.apiCreateItem(nil, text)
+                            }
                         } else {
-                            self.tempImportedImageURL = nil
-                            self.apiCreateItem(nil, text)
+                            Util.showOkAlertWithTitle("Error Importing URL", message: "Invalid URL.")
                         }
                     } else {
                         Util.showOkAlertWithTitle("Error Importing URL", message: "Double check your URL or try another one.")
@@ -567,6 +570,7 @@ class PROManageMorselViewController: UIViewController,
                         } else if (json!.valueForKey("data") != nil && json!.valueForKey("data") as? NSNull != NSNull()) {
                             self.morsel?.updateFromJSON((json!.valueForKey("data") as NSDictionary))
                             self.morsel?.cleanPrimaryItemID = self.morsel?.primaryItemID
+                            self.tableView?.reloadSections(NSIndexSet(index: 0), withRowAnimation: .Automatic)
                         }
                     }
                 })
