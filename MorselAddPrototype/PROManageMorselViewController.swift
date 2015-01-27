@@ -356,7 +356,7 @@ class PROManageMorselViewController: UIViewController,
     func showCamera() {
         let picker: UIImagePickerController = UIImagePickerController()
         picker.delegate = self
-        picker.allowsEditing = false
+        picker.allowsEditing = true
         picker.sourceType = UIImagePickerControllerSourceType.Camera
         picker.cameraCaptureMode = UIImagePickerControllerCameraCaptureMode.Photo
         presentViewController(picker, animated: true, completion: nil)
@@ -912,10 +912,12 @@ class PROManageMorselViewController: UIViewController,
     // MARK: - UIImagePickerControllerDelegate
 
     func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [NSObject : AnyObject]) {
-        originalImage = info[UIImagePickerControllerOriginalImage] as UIImage!
+        originalImage = info[UIImagePickerControllerEditedImage] as UIImage!
+
+        let lastSortOrder = morsel?.lastItemSortOrder()
+        apiCreateItem(originalImage!, nil, lastSortOrder! + 1, true)
 
         dismissViewControllerAnimated(false, completion: nil)
-        showCropperForImage(originalImage!)
     }
 
     func imagePickerControllerDidCancel(picker: UIImagePickerController) {

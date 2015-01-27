@@ -163,6 +163,8 @@ class PROTableViewCell: UITableViewCell, UITextViewDelegate, UIActionSheetDelega
     //  MARK: - UIActionSheetDelegate
 
     func actionSheet(actionSheet: UIActionSheet, clickedButtonAtIndex buttonIndex: Int) {
+        tableView!.superview?.endEditing(true)
+        endEditing(true)
         if buttonIndex == 0 {   //  Delete this Item
             var delegate: (AnyObject) = (tableView!.delegate! as AnyObject)
             if ((delegate.respondsToSelector(Selector("tableView:textViewDidBeginEditing:titleCell:"))) == true) {

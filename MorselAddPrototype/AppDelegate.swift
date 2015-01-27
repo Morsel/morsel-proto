@@ -24,6 +24,21 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         // Override point for customization after application launch.
         setupAppearance()
+        if NSUserDefaults.standardUserDefaults().objectForKey("displayedWhatsNew") == nil {
+            dispatch_after(
+                dispatch_time(DISPATCH_TIME_NOW, Int64(0.5 * Double(NSEC_PER_SEC)))
+                , dispatch_get_main_queue(), {
+                    Util.showOkAlertWithTitle("What's New in this Version", message:
+                        "- Import multiple photos from Photo Library by selecting more than one"
+                            + "\n\n- Want to change the cover photo? Just tap the 'i' over the photo"
+                            + "\n\n\n- NOTE: Photo editing features will come back in the final version"
+                    )
+            })
+
+            NSUserDefaults.standardUserDefaults().setObject(true, forKey: "displayedWhatsNew")
+            NSUserDefaults.standardUserDefaults().synchronize()
+        }
+
 
         return true
     }
