@@ -15,6 +15,8 @@ import UIKit
     optional func tableView(tableView: UITableView, updatedHeight: CGFloat, indexPath: NSIndexPath)
     optional func tableView(tableView: UITableView, textViewDidBeginEditing: UITextView, titleCell: Bool) -> Bool
     optional func tableView(tableView: UITableView, textViewDidEndEditing: UITextView, titleCell: Bool) -> Bool
+
+    optional func tableView(tableView: UITableView, makeCoverPhotoAtIndexPath: NSIndexPath)
 }
 
 let kCellBottomPadding: CGFloat = 20.0
@@ -99,7 +101,7 @@ class PROTableViewCell: UITableViewCell, UITextViewDelegate, UIActionSheetDelega
         var actionSheet = UIActionSheet(
             title: "Item Options",
             delegate: self,
-            cancelButtonTitle: nil,
+            cancelButtonTitle: "Make Cover Photo",
             destructiveButtonTitle: "Delete this Item"
         )
 
@@ -161,13 +163,19 @@ class PROTableViewCell: UITableViewCell, UITextViewDelegate, UIActionSheetDelega
     //  MARK: - UIActionSheetDelegate
 
     func actionSheet(actionSheet: UIActionSheet, clickedButtonAtIndex buttonIndex: Int) {
-        if buttonIndex == 0 {
+        if buttonIndex == 0 {   //  Delete this Item
             var delegate: (AnyObject) = (tableView!.delegate! as AnyObject)
             if ((delegate.respondsToSelector(Selector("tableView:textViewDidBeginEditing:titleCell:"))) == true) {
-
                 delegate.tableView!(tableView!,
                     commitEditingStyle: UITableViewCellEditingStyle.Delete,
                     forRowAtIndexPath: tableView!.indexPathForCell(self)!
+                )
+            }
+        } else if buttonIndex == 1 { // Make Cover Photo
+            var delegate: (AnyObject) = (tableView!.delegate! as AnyObject)
+            if ((delegate.respondsToSelector(Selector("tableView:makeCoverPhotoAtIndexPath:"))) == true) {
+                delegate.tableView!(tableView!,
+                    makeCoverPhotoAtIndexPath: tableView!.indexPathForCell(self)!
                 )
             }
         }

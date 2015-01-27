@@ -282,43 +282,49 @@ class PROManageMorselViewController: UIViewController,
     }
 
     func importURL(urlString: String) {
-        var escapedUrlString: String = urlString.stringByAddingPercentEncodingWithAllowedCharacters(NSCharacterSet.URLHostAllowedCharacterSet())!
-        var url = kWEBAPIURL + "/og/" + escapedUrlString
-        request(Method.GET, url,
-            parameters: [
-                "client[device]": "proto"
-            ]).responseJSON { (request, response, json, error) in
-                if error != nil {
-                    Util.showOkAlertWithTitle("Error", message: "\(error?.localizedDescription)")
-                    self.tempImportedImageURL = nil
-                } else if json != nil {
-                    var dictionary = json as NSDictionary
-
-                    var text = ""
-
-                    if (dictionary["url"] != nil && dictionary["url"] as? NSNull != NSNull()) {
-                        let dictString = dictionary["url"] as NSString
-                        text += "(Imported from \(dictString))\n\n"
-                    }
-
-                    if (dictionary["title"] != nil && dictionary["title"] as? NSNull != NSNull()) {
-                        let dictString = dictionary["title"] as NSString
-                        text += "\(dictString)\n\n"
-                    }
-                    if (dictionary["description"] != nil && dictionary["description"] as? NSNull != NSNull()) {
-                        let dictString = dictionary["description"] as NSString
-                        text += "\(dictString)\n\n"
-                    }
-                    if (dictionary["image_url"] != nil && dictionary["image_url"] as? NSNull != NSNull()) {
-                        self.tempImportedImageURL = json!.valueForKey("image_url") as NSString
-                        self.apiCreateItem(json!.valueForKey("image_url") as NSString, text)
-                    } else {
+        let lowercaseUrlString = urlString.lowercaseString
+        if (lowercaseUrlString.rangeOfString(".jpg") != nil) || (lowercaseUrlString.rangeOfString(".jpeg") != nil) || (lowercaseUrlString.rangeOfString(".png") != nil) {
+            self.tempImportedImageURL = urlString
+            self.apiCreateItem(urlString, "(Imported from \(urlString))\n\n")
+        } else {
+            var escapedUrlString: String = urlString.stringByAddingPercentEncodingWithAllowedCharacters(NSCharacterSet.URLHostAllowedCharacterSet())!
+            var url = kWEBAPIURL + "/og/" + escapedUrlString
+            request(Method.GET, url,
+                parameters: [
+                    "client[device]": "proto"
+                ]).responseJSON { (request, response, json, error) in
+                    if error != nil {
+                        Util.showOkAlertWithTitle("Error", message: "\(error?.localizedDescription)")
                         self.tempImportedImageURL = nil
-                        self.apiCreateItem(nil, text)
+                    } else if json != nil {
+                        var dictionary = json as NSDictionary
+
+                        var text = ""
+
+                        if (dictionary["url"] != nil && dictionary["url"] as? NSNull != NSNull()) {
+                            let dictString = dictionary["url"] as NSString
+                            text += "(Imported from \(dictString))\n\n"
+                        }
+
+                        if (dictionary["title"] != nil && dictionary["title"] as? NSNull != NSNull()) {
+                            let dictString = dictionary["title"] as NSString
+                            text += "\(dictString)\n\n"
+                        }
+                        if (dictionary["description"] != nil && dictionary["description"] as? NSNull != NSNull()) {
+                            let dictString = dictionary["description"] as NSString
+                            text += "\(dictString)\n\n"
+                        }
+                        if (dictionary["image_url"] != nil && dictionary["image_url"] as? NSNull != NSNull()) {
+                            self.tempImportedImageURL = json!.valueForKey("image_url") as NSString
+                            self.apiCreateItem(json!.valueForKey("image_url") as NSString, text)
+                        } else {
+                            self.tempImportedImageURL = nil
+                            self.apiCreateItem(nil, text)
+                        }
+                    } else {
+                        Util.showOkAlertWithTitle("Error Importing URL", message: "Double check your URL or try another one.")
                     }
-                } else {
-                    Util.showOkAlertWithTitle("Error Importing URL", message: "Double check your URL or try another one.")
-                }
+            }
         }
     }
 
@@ -458,7 +464,8 @@ class PROManageMorselViewController: UIViewController,
     // MARK: API
 
     func isDirty() -> Bool {
-        return morsel?.title != morsel?.cleanTitle
+        return morsel?.title != morsel?.cleanTitle ||
+            morsel?.primaryItemID != morsel?.cleanPrimaryItemID
     }
 
     func apiCreateMorsel() {
@@ -538,6 +545,33 @@ class PROManageMorselViewController: UIViewController,
                 })
         }
     }
+    
+    func apiUpdatePrimaryItemID() {
+        if morsel?.primaryItemID != morsel?.cleanPrimaryItemID {
+            updating = true
+
+            alamofireManager!.request(Method.PUT,
+                kAPIURL + "/morsels/" + morsel!.id! + ".json",
+                parameters: [
+                    "client[device]": "proto",
+                    "api_key": dataManager.currentUser!.apiKey!,
+                    "morsel[primary_item_id]": morsel!.primaryItemID!
+                ]).responseJSON({ (request, response, json, error) in
+                    self.updating = false
+                    if error != nil {
+                        Util.showOkAlertWithTitle("Error", message: "\(error?.localizedDescription)")
+                    } else if json != nil {
+                        if (json!.valueForKey("errors") != nil && json!.valueForKey("errors") as? NSNull != NSNull()) {
+                            var errors: NSDictionary = json!.valueForKey("errors") as NSDictionary
+                            Util.showOkAlertWithTitle("API Error", message: "\(errors)")
+                        } else if (json!.valueForKey("data") != nil && json!.valueForKey("data") as? NSNull != NSNull()) {
+                            self.morsel?.updateFromJSON((json!.valueForKey("data") as NSDictionary))
+                            self.morsel?.cleanPrimaryItemID = self.morsel?.primaryItemID
+                        }
+                    }
+                })
+        }
+    }
 
     func apiPublishMorsel() {
         if morsel?.items.count == 0 {
@@ -555,7 +589,7 @@ class PROManageMorselViewController: UIViewController,
             parameters: [
                 "client[device]": "proto",
                 "api_key": dataManager.currentUser!.apiKey!,
-                "morsel[primary_item_id]": morsel!.lastItemOrPrimaryItemID(),
+                "morsel[primary_item_id]": morsel!.primaryItemOrLastItemID(),
                 "post_to_facebook": "true", // !!!: Eh, just pass true for both of these, social worker doesn't block anything else
                 "post_to_twitter": "true"
             ]).responseJSON({ (request, response, json, error) in
@@ -1104,6 +1138,16 @@ class PROManageMorselViewController: UIViewController,
         navigationItem.pro_disableButtons(false)
 
         return true
+    }
+
+    func tableView(tableView: UITableView, makeCoverPhotoAtIndexPath: NSIndexPath) {
+        if (makeCoverPhotoAtIndexPath.section == 1) {
+            var item: PROItem = morsel!.sortedItems[makeCoverPhotoAtIndexPath.row]
+            morsel?.primaryItemID = item.id
+            apiUpdatePrimaryItemID()
+        } else {
+            Util.showOkAlertWithTitle("Something went wrong", message: "Unable to set this cover photo, please try again")
+        }
     }
 
 

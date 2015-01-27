@@ -15,6 +15,7 @@ class PROMorsel: NSObject {
     var title: String? = nil
     var cleanTitle: String? = nil
     var primaryItemID: String? = nil
+    var cleanPrimaryItemID: String? = nil
 
     var items: [PROItem] = []
     var sortedItems: [PROItem] {
@@ -72,6 +73,7 @@ class PROMorsel: NSObject {
         }
 
         cleanTitle = title
+        cleanPrimaryItemID = primaryItemID
     }
 
     func lastItemID() -> String? {
@@ -82,9 +84,8 @@ class PROMorsel: NSObject {
         return sortedItems.count > 0 ? Int(sortedItems.last!.sortOrder) : 0
     }
 
-    func lastItemOrPrimaryItemID() -> String {
-        var lastID: String? = lastItemID()
-        return lastID != nil ? lastID! : primaryItemID!
+    func primaryItemOrLastItemID() -> String {
+        return primaryItemID ?? (lastItemID() ?? "0")
     }
 
     func primaryItem() -> PROItem? {
